@@ -1,0 +1,45 @@
+﻿@{
+    ViewData["Title"] = "M.E.T Expenses";
+}
+
+@model List<MetExpense>
+<a asp-controller="Home" asp-action="CreateEditExpense" class="btn btn-secondary">Create New</a>
+
+
+<div class="text-center">
+    <h1 class="display-4">Expenses</h1>
+    <h2 class="display-4">M.E.T Inventory</h2>
+    <p>For The Department of Media, Engineering and Technical</p>
+    <br />
+
+    <hr />
+    <h3>Total Expenses (₦)@ViewBag.MetExpenses</h3>
+
+    <br />
+    <table class="table table-bordered table-striped table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>Id</th>
+                <th>Description</th>
+                <th>Quantity</th>
+                <th>Value (₦)</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var MetExpense in Model)
+            {
+                <tr>
+                    <td>@MetExpense.Id</td>
+                    <td>@MetExpense.Description</td>
+                    <td>@MetExpense.Quantity</td>
+                    <td>@MetExpense.Value</td>
+                    <td>
+                        <a asp-action="CreateEditExpense" asp-route-id="@MetExpense.Id">Edit</a>
+                        <a asp-action="DeleteMetExpense" asp-route-id="@MetExpense.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
