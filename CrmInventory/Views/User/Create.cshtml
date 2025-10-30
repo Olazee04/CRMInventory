@@ -1,0 +1,37 @@
+﻿@model CrmInventory.Models.User
+
+@{
+    ViewData["Title"] = "Add New User";
+}
+
+<h2 class="text-center">Add New User</h2>
+
+<form asp-action="Create" method="post" class="mt-4">
+    <div class="mb-3">
+        <label>Name</label>
+        <input asp-for="Name" class="form-control" placeholder="Enter full name" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label>Age</label>
+        <input asp-for="Age" type="number" class="form-control" />
+        <span asp-validation-for="Age" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label>Address</label>
+        <input asp-for="Address" class="form-control" placeholder="Enter address" />
+    </div>
+
+    <div class="mb-3">
+        <label>Profession</label>
+        <input asp-for="Profession" class="form-control" placeholder="Enter profession" />
+    </div>
+
+    <button type="submit" class="btn btn-success">Save User</button>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

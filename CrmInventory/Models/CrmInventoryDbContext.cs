@@ -3,16 +3,13 @@
 namespace CrmInventory.Models
 {
     public class CrmInventoryDbContext : DbContext
-
     {
-       public  DbSet<MetExpense> MetExpenses { get; set; }
+        public DbSet<MetExpense> MetExpenses { get; set; }
+        public DbSet<User> Users { get; set; }
 
         public CrmInventoryDbContext(DbContextOptions<CrmInventoryDbContext> options)
-       : base(options)
+            : base(options)
         {
-
         }
     }
-
-   
 }

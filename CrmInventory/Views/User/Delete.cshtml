@@ -1,0 +1,28 @@
+﻿@model CrmInventory.Models.User
+
+<h2>Delete User</h2>
+
+<div class="alert alert-danger">
+    Are you sure you want to delete this user?
+</div>
+
+<table class="table table-bordered">
+    <tr>
+        <td><strong>Name: </strong> @Model.Name</td>
+    </tr>
+    <tr>
+        <td><strong>Age: </strong> @Model.Age</td>
+    </tr>
+    <tr>
+        <td><strong>Address: </strong> @Model.Address</td>
+    </tr>
+    <tr>
+        <td><strong>Profession: </strong> @Model.Profession</td>
+    </tr>
+</table>
+
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="UserId" />
+    <button type="submit" class="btn btn-danger">Yes, Delete</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>
