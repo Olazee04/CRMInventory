@@ -10,18 +10,19 @@
 </div>
 
 <form asp-action="CreateEditExpenseForm">
+    <label>Description</label>
+    <input class="form-control" type="text" asp-for="Description" />
 
-    <label>Id</label>
-    <input hidden class="form-control" type="number" placeholder="0" asp-for="Id" />
-   
-    <label class="mt-4">Description</label>
-    <input class="form-control" type="text" placeholder="add  descripton" asp-for="Description" />
+    <label>Quantity</label>
+    <input class="form-control" type="number" asp-for="Quantity" />
 
-    <label> Quantity</label>
-    <input class="form-control" type="number" placeholder="0" asp-for="Quantity" />
+    <label>Value (₦)</label>
+    <input class="form-control" type="number" asp-for="Value" step="0.01" />
 
-    <label class="mt-4"> Value ₦</label>
-    <input class="form-control" type="number" placeholder="0" asp-for="Value" step="0.01" />
+    <label>User</label>
+    <select class="form-control" asp-for="UserId" asp-items="ViewBag.Users">
+        <option value="">-- Select a User --</option>
+    </select>
 
-    <button class="btn btn-primary mt-4" type="submit">Ok</button>
+    <button class="btn btn-primary mt-3" type="submit">Save</button>
 </form>

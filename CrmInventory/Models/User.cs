@@ -1,23 +1,25 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace CrmInventory.Models
 {
     public class User
     {
-        [Key]  // Primary Key
+        [Key]
         public int UserId { get; set; }
 
         [Required]
-        [StringLength(100)]
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         [Range(1, 120)]
         public int Age { get; set; }
 
-        [StringLength(200)]
-        public string Address { get; set; }
+        [Required]
+        public string Address { get; set; } = string.Empty;
 
-        [StringLength(100)]
-        public string Profession { get; set; }
+        [Required]
+        public string Profession { get; set; } = string.Empty;
+
+        public virtual ICollection<MetExpense>? MetExpenses { get; set; }
     }
 }

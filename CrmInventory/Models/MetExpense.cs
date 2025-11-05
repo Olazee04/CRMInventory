@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations.Schema;
   
 namespace CrmInventory.Models
 {
@@ -12,6 +12,13 @@ namespace CrmInventory.Models
         public int Quantity { get; set; }
 
         public decimal Value { get; set; }
+
+        // 👇 Relationship: each Expense belongs to ONE User
+        [Required]
+        public int UserId { get; set; }
+
+        [ForeignKey("UserId")]
+        public User User { get; set; }
     }
 
 }

@@ -12,19 +12,47 @@ namespace CrmInventory.Controllers
             _context = context;
         }
 
-        // GET: Display all users
+        // ✅ GET: Display all users
         public IActionResult Index()
         {
             var users = _context.Users.ToList();
             return View(users);
         }
 
-        // GET: Show form to add new user
+        // ✅ GET: Show form to add new user
         public IActionResult Create()
         {
             return View();
         }
-        // GET: Edit user form
+
+        // ✅ POST: Handle form submission (Save new user)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Create(User user)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Users.Add(user);
+                    _context.SaveChanges();
+                    TempData["SuccessMessage"] = "✅ User added successfully!";
+                    return RedirectToAction("Index");
+                }
+                catch
+                {
+                    TempData["ErrorMessage"] = "❌ An error occurred while saving the user.";
+                }
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "⚠️ Please fill in all required fields correctly.";
+            }
+
+            return View(user);
+        }
+
+        // ✅ GET: Edit user form
         public IActionResult Edit(int id)
         {
             var user = _context.Users.Find(id);
@@ -34,20 +62,23 @@ namespace CrmInventory.Controllers
             return View(user);
         }
 
-        // POST: Save edited user
+        // ✅ POST: Save edited user
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Edit(User user)
         {
             if (ModelState.IsValid)
             {
                 _context.Users.Update(user);
                 _context.SaveChanges();
+                TempData["SuccessMessage"] = "✅ User updated successfully!";
                 return RedirectToAction("Index");
             }
+            TempData["ErrorMessage"] = "⚠️ Please correct the highlighted fields.";
             return View(user);
         }
 
-        // GET: Confirm delete page
+        // ✅ GET: Confirm delete page
         public IActionResult Delete(int id)
         {
             var user = _context.Users.Find(id);
@@ -57,8 +88,9 @@ namespace CrmInventory.Controllers
             return View(user);
         }
 
-        // POST: Delete user permanently
+        // ✅ POST: Delete user permanently
         [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
         {
             var user = _context.Users.Find(id);
@@ -67,21 +99,8 @@ namespace CrmInventory.Controllers
 
             _context.Users.Remove(user);
             _context.SaveChanges();
+            TempData["SuccessMessage"] = "🗑️ User deleted successfully!";
             return RedirectToAction("Index");
-        }
-
-
-        // POST: Handle form submission
-        [HttpPost]
-        public IActionResult Create(User user)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Users.Add(user);
-                _context.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(user);
         }
     }
 }

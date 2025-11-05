@@ -1,42 +1,33 @@
-﻿@{
-    ViewData["Title"] = "M.E.T Expenses";
-}
+﻿@model List<MetExpense>
 
-@model List<MetExpense>
-<a asp-controller="Home" asp-action="CreateEditExpense" class="btn btn-secondary">Create New</a>
+<div class="container mt-4">
+    <h2 class="text-center mb-4">M.E.T Expenses</h2>
 
+    <a asp-action="CreateEditExpense" class="btn btn-primary mb-3">➕ Add New Expense</a>
 
-<div class="text-center">
-    <h1 class="display-4">Expenses</h1>
-    <h2 class="display-4">M.E.T Inventory</h2>
-    <p>For The Department of Media, Engineering and Technical</p>
-    <br />
-
-    <hr />
-    <h3>Total Expenses (₦)@ViewBag.MetExpenses</h3>
-
-    <br />
     <table class="table table-bordered table-striped table-hover">
         <thead class="table-dark">
             <tr>
-                <th>Id</th>
+                <th>ID</th>
                 <th>Description</th>
                 <th>Quantity</th>
                 <th>Value (₦)</th>
+                <th>User</th>
                 <th>Action</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var MetExpense in Model)
+            @foreach (var item in Model)
             {
                 <tr>
-                    <td>@MetExpense.Id</td>
-                    <td>@MetExpense.Description</td>
-                    <td>@MetExpense.Quantity</td>
-                    <td>@MetExpense.Value</td>
+                    <td>@item.Id</td>
+                    <td>@item.Description</td>
+                    <td>@item.Quantity</td>
+                    <td>@item.Value</td>
+                    <td>@item.User?.Name</td>
                     <td>
-                        <a asp-action="CreateEditExpense" asp-route-id="@MetExpense.Id">Edit</a>
-                        <a asp-action="DeleteMetExpense" asp-route-id="@MetExpense.Id">Delete</a>
+                        <a asp-action="CreateEditExpense" asp-route-id="@item.Id" class="btn btn-sm btn-warning">✏️ Edit</a>
+                        <a asp-action="DeleteMetExpense" asp-route-id="@item.Id" class="btn btn-sm btn-danger">🗑 Delete</a>
                     </td>
                 </tr>
             }
