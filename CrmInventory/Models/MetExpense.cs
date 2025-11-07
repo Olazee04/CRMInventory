@@ -1,7 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-  
-namespace CrmInventory.Models
+﻿namespace CrmInventory.Models
 {
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+
     public class MetExpense
     {
         public int Id { get; set; }
@@ -11,15 +12,14 @@ namespace CrmInventory.Models
 
         public int Quantity { get; set; }
 
+        [Required]
+        [Column(TypeName = "decimal(18,2)")]
         public decimal Value { get; set; }
 
-        // 👇 Relationship: each Expense belongs to ONE User
         [Required]
         public int UserId { get; set; }
 
         [ForeignKey("UserId")]
-        public User User { get; set; }
+        public User? User { get; set; }
     }
-
 }
-

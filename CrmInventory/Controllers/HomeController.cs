@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Diagnostics;
+using Microsoft.EntityFrameworkCore;
 
 namespace CrmInventory.Controllers
 {
@@ -23,7 +24,10 @@ namespace CrmInventory.Controllers
 
         public IActionResult MetExpenses()
         {
-            var allMetExpenses = _context.MetExpenses.ToList();
+            var allMetExpenses = _context.MetExpenses
+                .Include(x => x.User) // 👈 This loads the User details
+                .ToList();
+
             var totalMetExpenses = allMetExpenses.Sum(x => x.Value);
 
             ViewBag.MetExpenses = totalMetExpenses;
@@ -56,37 +60,27 @@ namespace CrmInventory.Controllers
             return View(expense);
         }
 
-        // ✅ POST: Create or Edit form submission
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult CreateEditExpense(MetExpense model)
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.Users = new SelectList(_context.Users, "UserId", "Name");
-                return View(model);
-            }
-
-            if (model.UserId == 0)
-            {
-                ModelState.AddModelError("UserId", "Please select a user.");
-                ViewBag.Users = new SelectList(_context.Users, "UserId", "Name");
+                ViewBag.Users = new SelectList(_context.Users, "UserId", "Name", model.UserId);
                 return View(model);
             }
 
             if (model.Id == 0)
-            {
-                // Create new expense
                 _context.MetExpenses.Add(model);
-            }
             else
-            {
-                // Edit existing expense
                 _context.MetExpenses.Update(model);
-            }
 
             _context.SaveChanges();
+
+            TempData["SuccessMessage"] = "✅ Expense saved successfully!";
             return RedirectToAction("MetExpenses");
         }
+
 
         public IActionResult DeleteMetExpense(int id)
         {
@@ -114,8 +108,16 @@ namespace CrmInventory.Controllers
         {
             var totalUsers = _context.Users.Count();
             var totalExpenses = _context.MetExpenses.Count();
-            var highestExpense = _context.MetExpenses.Any() ? _context.MetExpenses.Max(e => e.Value) : 0;
+
+            // Safely handle Max() if Value isn't numeric or empty
+            var highestExpense = _context.MetExpenses.Any()
+                ? _context.MetExpenses
+                    .Select(e => (decimal?)e.Value)  // safe cast to nullable decimal
+                    .Max() ?? 0
+                : 0;
+
             var latestExpenses = _context.MetExpenses
+                .Include(e => e.User)
                 .OrderByDescending(e => e.Id)
                 .Take(5)
                 .ToList();
