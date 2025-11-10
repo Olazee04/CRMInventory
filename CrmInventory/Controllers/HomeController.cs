@@ -106,28 +106,44 @@ namespace CrmInventory.Controllers
 
         public IActionResult Dashboard()
         {
-            var totalUsers = _context.Users.Count();
-            var totalExpenses = _context.MetExpenses.Count();
+            // ✅ Total Users
+            ViewBag.TotalUsers = _context.Users.Count();
 
-            // Safely handle Max() if Value isn't numeric or empty
-            var highestExpense = _context.MetExpenses.Any()
-                ? _context.MetExpenses
-                    .Select(e => (decimal?)e.Value)  // safe cast to nullable decimal
-                    .Max() ?? 0
+            // ✅ Total Expenses
+            var totalExpenses = _context.MetExpenses.Any()
+                ? _context.MetExpenses.Sum(x => (double)x.Value)
                 : 0;
+            ViewBag.TotalExpenses = totalExpenses;
 
+            // ✅ Highest Single Expense
+            var highestExpense = _context.MetExpenses.Any()
+                ? _context.MetExpenses.Max(x => (double)x.Value)
+                : 0;
+            ViewBag.HighestExpense = highestExpense;
+
+            // ✅ Latest 5 Expenses
             var latestExpenses = _context.MetExpenses
                 .Include(e => e.User)
-                .OrderByDescending(e => e.Id)
+                .OrderByDescending(x => x.Id)
                 .Take(5)
                 .ToList();
-
-            ViewBag.TotalUsers = totalUsers;
-            ViewBag.TotalExpenses = totalExpenses;
-            ViewBag.HighestExpense = highestExpense;
             ViewBag.LatestExpenses = latestExpenses;
+
+            // ✅ Total Expense per User
+            var userTotals = _context.Users
+                .Select(u => new
+                {
+                    UserName = u.Name,
+                    Total = u.MetExpenses.Sum(e => (double?)e.Value) ?? 0
+                })
+                .ToList();
+
+            ViewBag.UserTotals = userTotals;
 
             return View();
         }
+
+
+
     }
 }

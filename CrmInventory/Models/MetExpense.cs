@@ -1,10 +1,11 @@
-﻿namespace CrmInventory.Models
-{
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
+namespace CrmInventory.Models
+{
     public class MetExpense
     {
+        [Key]
         public int Id { get; set; }
 
         [Required]

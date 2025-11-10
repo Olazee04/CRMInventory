@@ -20,6 +20,7 @@ namespace CrmInventory.Models
         [Required]
         public string Profession { get; set; } = string.Empty;
 
+        // Relationship: one user can have many expenses
         public virtual ICollection<MetExpense>? MetExpenses { get; set; }
     }
 }

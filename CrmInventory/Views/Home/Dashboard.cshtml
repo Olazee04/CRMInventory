@@ -18,7 +18,7 @@
             <div class="card text-white bg-success mb-3">
                 <div class="card-body">
                     <h5>Total Expenses</h5>
-                    <h3>@ViewBag.TotalExpenses</h3>
+                    <h3>₦@String.Format("{0:N0}", ViewBag.TotalExpenses)</h3>
                 </div>
             </div>
         </div>
@@ -26,7 +26,7 @@
             <div class="card text-white bg-danger mb-3">
                 <div class="card-body">
                     <h5>Highest Expense</h5>
-                    <h3>₦@ViewBag.HighestExpense</h3>
+                    <h3>₦@String.Format("{0:N0}", ViewBag.HighestExpense)</h3>
                 </div>
             </div>
         </div>
@@ -48,8 +48,27 @@
                 <tr>
                     <td>@item.Id</td>
                     <td>@item.Description</td>
-                    <td>@item.Value</td>
+                    <td>₦@String.Format("{0:N0}", item.Value)</td>
                     <td>@item.Quantity</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <h4 class="mt-5 mb-3">👤 User Expense Breakdown</h4>
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>User</th>
+                <th>Total Expense (₦)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var u in ViewBag.UserTotals)
+            {
+                <tr>
+                    <td>@u.UserName</td>
+                    <td>₦@String.Format("{0:N0}", u.Total)</td>
                 </tr>
             }
         </tbody>
