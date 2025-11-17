@@ -107,37 +107,40 @@ namespace CrmInventory.Controllers
         public IActionResult Dashboard()
         {
             // ✅ Total Users
-            ViewBag.TotalUsers = _context.Users.Count();
+            var totalUsers = _context.Users.Count();
+            ViewBag.TotalUsers = totalUsers;
 
-            // ✅ Total Expenses
+            // ✅ Total Expenses (sum of all)
             var totalExpenses = _context.MetExpenses.Any()
-                ? _context.MetExpenses.Sum(x => (double)x.Value)
+                ? _context.MetExpenses.ToList().Sum(e => e.Value)
                 : 0;
             ViewBag.TotalExpenses = totalExpenses;
 
-            // ✅ Highest Single Expense
+            
             var highestExpense = _context.MetExpenses.Any()
-                ? _context.MetExpenses.Max(x => (double)x.Value)
+                ? _context.MetExpenses.ToList().Max(e => e.Value)
                 : 0;
             ViewBag.HighestExpense = highestExpense;
 
-            // ✅ Latest 5 Expenses
+            
             var latestExpenses = _context.MetExpenses
                 .Include(e => e.User)
-                .OrderByDescending(x => x.Id)
+                .OrderByDescending(e => e.Id)
                 .Take(5)
                 .ToList();
             ViewBag.LatestExpenses = latestExpenses;
 
-            // ✅ Total Expense per User
+           
             var userTotals = _context.Users
+                .Include(u => u.MetExpenses)
                 .Select(u => new
                 {
                     UserName = u.Name,
-                    Total = u.MetExpenses.Sum(e => (double?)e.Value) ?? 0
+                    Total = u.MetExpenses!.Any()
+                        ? u.MetExpenses!.Sum(e => e.Value)
+                        : 0
                 })
                 .ToList();
-
             ViewBag.UserTotals = userTotals;
 
             return View();
