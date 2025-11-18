@@ -22,5 +22,7 @@ namespace CrmInventory.Models
 
         [ForeignKey("UserId")]
         public User? User { get; set; }
+
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
     }
 }

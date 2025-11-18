@@ -1,0 +1,58 @@
+﻿@model List<CrmInventory.Models.MetExpense>
+
+@{
+    ViewData["Title"] = "User Expenses";
+}
+
+<div class="container mt-4">
+
+    <h2 class="text-center mb-3">
+        Expense Breakdown for <span class="text-primary">@ViewBag.UserName</span>
+    </h2>
+
+    <h5 class="text-center text-success mb-4">
+        Total Amount Spent: <strong>₦@ViewBag.TotalExpenses</strong>
+    </h5>
+
+    <div class="mb-3">
+        <a asp-action="Index" class="btn btn-secondary">
+            ← Back to Users
+        </a>
+    </div>
+
+    <table class="table table-bordered table-striped text-center align-middle">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Description</th>
+                <th>Quantity</th>
+                <th>Value (₦)</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @if (Model == null || !Model.Any())
+            {
+                <tr>
+                    <td colspan="5" class="text-muted py-3">
+                        This user has no recorded expenses.
+                    </td>
+                </tr>
+            }
+            else
+            {
+                foreach (var expense in Model)
+                {
+                    <tr>
+                        <td>@expense.Id</td>
+                        <td>@expense.Description</td>
+                        <td>@expense.Quantity</td>
+                        <td>@expense.Value</td>
+                        <td>@expense.CreatedAt.ToString("dd/MM/yyyy")</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>

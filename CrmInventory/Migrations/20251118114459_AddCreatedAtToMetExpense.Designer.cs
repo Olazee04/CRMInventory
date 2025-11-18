@@ -3,6 +3,7 @@ using System;
 using CrmInventory.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CrmInventory.Migrations
 {
     [DbContext(typeof(CrmInventoryDbContext))]
-    partial class CrmInventoryDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251118114459_AddCreatedAtToMetExpense")]
+    partial class AddCreatedAtToMetExpense
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.9");

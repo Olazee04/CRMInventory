@@ -1,5 +1,6 @@
 ﻿using CrmInventory.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace CrmInventory.Controllers
 {
@@ -15,9 +16,19 @@ namespace CrmInventory.Controllers
         // ✅ GET: Display all users
         public IActionResult Index()
         {
-            var users = _context.Users.ToList();
+            var users = _context.Users
+                .Include(u => u.MetExpenses) // include expenses
+                .ToList();
+
+            // Add total expense per user using ViewBag or a ViewModel
+            ViewBag.UserTotals = users.ToDictionary(
+                u => u.UserId,
+                u => u.MetExpenses?.Sum(e => e.Value) ?? 0
+            );
+
             return View(users);
         }
+
 
         // ✅ GET: Show form to add new user
         public IActionResult Create()
@@ -102,5 +113,35 @@ namespace CrmInventory.Controllers
             TempData["SuccessMessage"] = "🗑️ User deleted successfully!";
             return RedirectToAction("Index");
         }
+
+        public IActionResult Expenses(int id)
+        {
+            var user = _context.Users
+                .Include(u => u.MetExpenses)
+                .FirstOrDefault(u => u.UserId == id);
+
+            if (user == null)
+                return NotFound();
+
+            return View(user);
+        }
+
+        public IActionResult UserExpenses(int id)
+        {
+            var user = _context.Users
+                .Include(u => u.MetExpenses)
+                .FirstOrDefault(u => u.UserId == id);
+
+            if (user == null)
+                return NotFound();
+
+            var userExpenses = user.MetExpenses?.ToList() ?? new List<MetExpense>();
+
+            ViewBag.UserName = user.Name;
+            ViewBag.TotalExpenses = userExpenses.Sum(e => e.Value);
+
+            return View(userExpenses);
+        }
+
     }
 }

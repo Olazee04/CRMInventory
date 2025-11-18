@@ -71,9 +71,19 @@ namespace CrmInventory.Controllers
             }
 
             if (model.Id == 0)
+            {
+                model.CreatedAt = DateTime.Now;
                 _context.MetExpenses.Add(model);
+            }
+               
             else
+            {
+                var existing = _context.MetExpenses.AsNoTracking().First(e => e.Id == model.Id);
+                model.CreatedAt = existing.CreatedAt;
+                
                 _context.MetExpenses.Update(model);
+            }
+                
 
             _context.SaveChanges();
 
@@ -130,7 +140,18 @@ namespace CrmInventory.Controllers
                 .ToList();
             ViewBag.LatestExpenses = latestExpenses;
 
-           
+            var todayTotal = _context.MetExpenses
+    .Where(e => e.CreatedAt.Date == DateTime.Today)
+    .Sum(e => (double?)e.Value) ?? 0;
+
+            var thisMonthTotal = _context.MetExpenses
+                .Where(e => e.CreatedAt.Month == DateTime.Now.Month)
+                .Sum(e => (double?)e.Value) ?? 0;
+
+            ViewBag.TodayTotal = todayTotal;
+            ViewBag.ThisMonthTotal = thisMonthTotal;
+
+
             var userTotals = _context.Users
                 .Include(u => u.MetExpenses)
                 .Select(u => new
